@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieManagementApi.Presentation;
 using MovieManagementAPI;
 using MovieManagementAPI.Configurations;
+using Repositories;
 using Services.AutomapperConfig;
 
 
@@ -36,10 +38,26 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
+
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<RepositoryContext>();
+        // use context
+
+        dbContext.Database.Migrate(); //if a new database is added
+    }
+}
+catch (Exception)
+{
+
+    throw;
+}
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI();
 //}
 
