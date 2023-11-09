@@ -66,7 +66,7 @@ namespace MovieManagementApi.Presentation.Controllers
         [HttpHead]
         [ProducesResponseType(typeof(GlobalResponse<GetCountryDto[]>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> ListCountries(CountryParameters parameters)
+        public async Task<IActionResult> ListCountries([FromQuery]CountryParameters parameters)
         {
             var result = await serviceManager.CountryService.ListCountriesAsync(parameters);
 

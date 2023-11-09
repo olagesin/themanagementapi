@@ -25,7 +25,7 @@ namespace Services
             await _repositoryManager.GenreRepository.CreateGenre(genreToAdd);
             await _repositoryManager.SaveChangesAsync();
 
-            var createdGenre = _repositoryManager.GenreRepository
+            var createdGenre = await _repositoryManager.GenreRepository
                 .GetGenreByUUID(genreToAdd.UUID, false);
 
             if (createdGenre is null)
@@ -47,9 +47,18 @@ namespace Services
             }
         }
 
-        public Task<ResponseModel<List<GetGenreDto>>> GetAllGenreAsync(GenreParameters parameters)
+        public async Task<ResponseModel<List<GetGenreDto>>> GetAllGenreAsync(GenreParameters parameters)
         {
-            throw new NotImplementedException();
+            var listCountriesResult = await _repositoryManager.GenreRepository
+                    .ListGenres(parameters, false);
+
+            return new ResponseModel<List<GetGenreDto>>()
+            {
+                Message = "success.",
+                Status = listCountriesResult.Status,
+                Data = _mapper.Map<List<GetGenreDto>>(listCountriesResult.Data),
+                MetaData = listCountriesResult.MetaData
+            };
         }
 
         public async Task<ResponseModel<GetGenreDto>> GetGenreAsync(string genreId)

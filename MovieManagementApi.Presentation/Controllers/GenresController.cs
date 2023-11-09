@@ -68,7 +68,7 @@ namespace MovieManagementApi.Presentation.Controllers
         [HttpHead]
         [ProducesResponseType(typeof(GlobalResponse<GetGenreDto[]>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> ListGenres(GenreParameters parameters)
+        public async Task<IActionResult> ListGenres([FromQuery]GenreParameters parameters)
         {
             var result = await serviceManager.GenreService.GetAllGenreAsync(parameters);
 
