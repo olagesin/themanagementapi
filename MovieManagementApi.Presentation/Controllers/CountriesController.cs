@@ -3,23 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Contracts;
 using SharedUtilities.FilterParameters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieManagementApi.Presentation.Controllers
 {
     [ApiController]
     [ApiVersion("1")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class MoviesController : ControllerBase
+    public class CountriesController : ControllerBase
     {
         private readonly IServiceManager serviceManager;
 
-        public MoviesController(IServiceManager serviceManager)
+        public CountriesController(IServiceManager serviceManager)
         {
             this.serviceManager = serviceManager;
         }
@@ -33,13 +27,13 @@ namespace MovieManagementApi.Presentation.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(GlobalResponse<GetMovieDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GlobalResponse<GetCountryDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Create(AddMovieDto model)
+        public async Task<IActionResult> Create(AddCountryDto model)
         {
-            var result = await serviceManager.MovieService.AddMovie(model);
+            var result = await serviceManager.CountryService.AddCountryAsync(model);
 
-            if(result.Status != ResponseStatus.Success)
+            if (result.Status != ResponseStatus.Success)
             {
                 ModelState.AddModelError("Failed", result.Message);
                 return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
@@ -51,11 +45,11 @@ namespace MovieManagementApi.Presentation.Controllers
         }
 
         [HttpGet("get-by-id")]
-        [ProducesResponseType(typeof(GlobalResponse<GetMovieDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GlobalResponse<GetCountryDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> GetMovie(string movieId)
+        public async Task<IActionResult> GetCountry(string countryId)
         {
-            var result = await serviceManager.MovieService.GetMovie(movieId);
+            var result = await serviceManager.CountryService.GetCountryAsync(countryId);
 
             if (result.Status == ResponseStatus.NotFound)
             {
@@ -68,48 +62,23 @@ namespace MovieManagementApi.Presentation.Controllers
             }
         }
 
-
         [HttpGet]
         [HttpHead]
-        [ProducesResponseType(typeof(GlobalResponse<GetMovieDto[]>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GlobalResponse<GetCountryDto[]>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> ListMovies([FromQuery]MovieParameters parameters)
+        public async Task<IActionResult> ListCountries(CountryParameters parameters)
         {
-            var result = await serviceManager.MovieService.ListMovies(parameters);
+            var result = await serviceManager.CountryService.ListCountriesAsync(parameters);
 
             return Ok(ResponseBuilder.BuildResponse(null, result.Data));
-        }
-
-
-        [HttpDelete]
-        [ProducesResponseType(typeof(GlobalResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> DeleteMovie(string movieId)
-        {
-            var result = await serviceManager.MovieService.DeleteMovie(movieId);
-
-            if (result.Status == ResponseStatus.Failed)
-            {
-                ModelState.AddModelError("Failed", result.Message);
-                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
-            }
-            else if (result.Status == ResponseStatus.NotFound)
-            {
-                ModelState.AddModelError("Not found.", result.Message);
-                return NotFound(ResponseBuilder.BuildResponse<object>(ModelState, null));
-            }
-            else
-            {
-                return Created("", ResponseBuilder.BuildResponse(null, result.Data));
-            }
         }
 
         [HttpPut]
         [ProducesResponseType(typeof(GlobalResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> UpdateMovie(string movieId, UpdateMovie model)
+        public async Task<IActionResult> UpdateMovie(string countryId, UpdateCountryDto model)
         {
-            var result = await serviceManager.MovieService.UpdateMovie(movieId, model);
+            var result = await serviceManager.CountryService.UpdateCountryAsync(countryId, model);
 
             if (result.Status == ResponseStatus.Failed)
             {
