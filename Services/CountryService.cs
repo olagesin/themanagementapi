@@ -25,7 +25,7 @@ namespace Services
             await _repositoryManager.CountryRepository.CreateCountry(countryToAdd);
             await _repositoryManager.SaveChangesAsync();
 
-            var createdCountry = _repositoryManager.CountryRepository
+            var createdCountry = await _repositoryManager.CountryRepository
                 .GetCountryByUUID(countryToAdd.UUID, false);
 
             if(createdCountry is null)
