@@ -53,7 +53,7 @@ namespace MovieManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Models.DatabaseModels.Genre", b =>
@@ -87,7 +87,7 @@ namespace MovieManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("Models.DatabaseModels.Movie", b =>
@@ -139,7 +139,7 @@ namespace MovieManagementAPI.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("Models.DatabaseModels.MovieGenre", b =>
@@ -176,7 +176,7 @@ namespace MovieManagementAPI.Migrations
                     b.HasIndex("MovieId", "GenreId")
                         .IsUnique();
 
-                    b.ToTable("MovieGenres");
+                    b.ToTable("MovieGenres", (string)null);
                 });
 
             modelBuilder.Entity("Models.DatabaseModels.Movie", b =>

@@ -20,16 +20,25 @@ namespace Repositories
 
         public async Task<Movie> GetMovieById(int id, bool trackChanges) =>
             await ListAll(trackChanges)
+            .Include(c => c.Genres)
+            .ThenInclude(c => c.Genre)
+            .Include(c => c.Country)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task<Movie> GetMovieByUUID(string uuid, bool trackChanges) =>
             await ListAll(trackChanges)
+            .Include(c => c.Genres)
+            .ThenInclude(c => c.Genre)
+            .Include(c => c.Country)
             .FirstOrDefaultAsync(c => c.UUID == uuid);
 
         public async Task<ResponseModel<List<Movie>>> ListMovies(MovieParameters parameters, bool trackChanges)
         {
             var data = await ListAll(trackChanges)
                 .Paginate(parameters.PageNumber, parameters.PageSize)
+                .Include(c => c.Genres)
+                .ThenInclude(c => c.Genre)
+                .Include(c => c.Country)
                 .ToListAsync();
 
             var count = await ListAll(false)

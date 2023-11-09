@@ -28,7 +28,7 @@ namespace Services
         public async Task<ResponseModel<GetMovieDto>> AddMovie(AddMovieDto model)
         {
             var country = await _repositoryManager.CountryRepository
-                .GetCountryByUUID(model.CountryId, true);
+                .GetCountryByUUID(model.CountryShotInId, true);
 
             if(country == null)
             {

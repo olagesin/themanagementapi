@@ -15,7 +15,7 @@ namespace Models.DatabaseModels
         public int Rating { get; set; }
 
         [Required]
-        [Range(0, 1000000)]
+        [Range(0, 100000)]
         public decimal TicketPrice { get; set; }
 
         [Required]

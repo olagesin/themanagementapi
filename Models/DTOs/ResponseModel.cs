@@ -58,7 +58,7 @@ namespace Models.DTOs
         public decimal TicketPrice { get; set; }
 
         [Required]
-        public string CountryId { get; set; }
+        public string CountryShotInId { get; set; }
 
         [Required]
         public List<string> GenreIds { get; set; }
