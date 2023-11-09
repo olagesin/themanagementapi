@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharedUtilities.FilterParameters
 {
-    public abstract class CountryParameters : RequestParameters
+    public class CountryParameters : RequestParameters
     {
     }
 }

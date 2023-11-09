@@ -1,6 +1,6 @@
 ﻿namespace SharedUtilities.FilterParameters
 {
-    public abstract class GenreParameters : RequestParameters
+    public class GenreParameters : RequestParameters
     {
 
     }
