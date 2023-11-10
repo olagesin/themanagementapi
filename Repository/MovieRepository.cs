@@ -35,13 +35,22 @@ namespace Repositories
         public async Task<ResponseModel<List<Movie>>> ListMovies(MovieParameters parameters, bool trackChanges)
         {
             var data = await ListAll(trackChanges)
-                .Paginate(parameters.PageNumber, parameters.PageSize)
                 .Include(c => c.Genres)
                 .ThenInclude(c => c.Genre)
                 .Include(c => c.Country)
+                .FilterByReleaseDate(parameters.MinDate, parameters.MaxDate)
+                .FilterByCountry(parameters.CountryId)
+                .FilterByRating(parameters.MaxRating)
+                .FilterByPrice(parameters.MinPrice, parameters.MaxPrice)
+                .FilteByGenreId(parameters.GenreId)
+                .Paginate(parameters.PageNumber, parameters.PageSize)
                 .ToListAsync();
 
             var count = await ListAll(false)
+                .FilterByReleaseDate(parameters.MinDate, parameters.MaxDate)
+                .FilterByCountry(parameters.CountryId)
+                .FilterByRating(parameters.MaxRating)
+                .FilterByPrice(parameters.MinPrice, parameters.MaxPrice)
                 .CountAsync();
 
             var pagedList = new PagedList<Movie>(data, count,

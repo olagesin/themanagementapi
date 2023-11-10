@@ -271,6 +271,14 @@ namespace Services
             }
         }
 
+        //public async Task<ResponseModel<List<GetMovieDto>>> FilterMovies(MovieGenreParameters parameters)
+        //{
+        //    var listMovies = await _repositoryManager.MovieGenreRepository
+        //        .ListMovieGenres(parameters, false);
+
+
+        //}
+
         public async Task<ResponseModel<List<GetMovieDto>>> ListMovies(MovieParameters parameters)
         {
             var listMovies = await _repositoryManager.MovieRepository
