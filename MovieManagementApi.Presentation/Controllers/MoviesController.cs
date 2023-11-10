@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MovieManagementApi.Presentation.Controllers
@@ -37,6 +38,11 @@ namespace MovieManagementApi.Presentation.Controllers
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Create(AddMovieDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
             var result = await serviceManager.MovieService.AddMovie(model);
 
             if(result.Status != ResponseStatus.Success)
@@ -77,6 +83,9 @@ namespace MovieManagementApi.Presentation.Controllers
         {
             var result = await serviceManager.MovieService.ListMovies(parameters);
 
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(result.MetaData));
+
             return Ok(ResponseBuilder.BuildResponse(null, result.Data));
         }
 
@@ -109,6 +118,11 @@ namespace MovieManagementApi.Presentation.Controllers
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> UpdateMovie(string movieId, UpdateMovie model)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
             var result = await serviceManager.MovieService.UpdateMovie(movieId, model);
 
             if (result.Status == ResponseStatus.Failed)

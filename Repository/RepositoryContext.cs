@@ -27,26 +27,6 @@ namespace Repositories
                 .HasIndex(c => new { c.MovieId, c.GenreId })
                 .IsUnique(true);
 
-            //modelBuilder.Entity<Movie>(entity =>
-            //{
-            //    entity.ToTable("Movies");
-
-            //    // Setting the integer column with a check constraint
-
-            //    //entity.Property(e => e.Rating)
-            //    //    .IsRequired();
-
-            //    // Adding a check constraint to the column
-            //    entity.HasCheckConstraint("CK_Movies_Rating", $"rating >= 1 AND rating <= 5");
-
-
-            //    //entity.Property(e => e.TicketPrice)
-            //    //    .IsRequired();
-
-            //    // Adding a check constraint to the column
-            //    entity.HasCheckConstraint("CK_Movies_TicketPrice", $"TicketPrice >= 0 AND TicketPrice <= 100000000");
-            //});
-
             base.OnModelCreating(modelBuilder);
         }
     }

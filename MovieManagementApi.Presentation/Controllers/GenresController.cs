@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Contracts;
 using SharedUtilities.FilterParameters;
+using System.Text.Json;
 
 namespace MovieManagementApi.Presentation.Controllers
 {
@@ -32,6 +33,11 @@ namespace MovieManagementApi.Presentation.Controllers
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Create(AddGenreDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
             var result = await serviceManager.GenreService.AddGenreAsync(model);
 
             if (result.Status != ResponseStatus.Success)
@@ -72,6 +78,9 @@ namespace MovieManagementApi.Presentation.Controllers
         {
             var result = await serviceManager.GenreService.GetAllGenreAsync(parameters);
 
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(result.MetaData));
+
             return Ok(ResponseBuilder.BuildResponse(null, result.Data));
         }
 
@@ -80,6 +89,11 @@ namespace MovieManagementApi.Presentation.Controllers
         [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> UpdateMovie(string genreId, UpdateGenreDto model)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
             var result = await serviceManager.GenreService.UpdateGenreAsync(genreId, model);
 
             if (result.Status == ResponseStatus.Failed)
