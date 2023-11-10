@@ -16,6 +16,8 @@ namespace Repositories.Contracts
 
         Task<Genre> GetGenreByUUID(string uuid, bool trackChanges);
 
+        Task<Genre> GetByName(string name, bool trackChanges);
+
         Task<ResponseModel<List<Genre>>> ListGenres(GenreParameters parameters, bool trackChanges);
     }
 }

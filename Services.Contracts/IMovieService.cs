@@ -14,5 +14,9 @@ namespace Services.Contracts
         Task<ResponseModel<List<GetMovieDto>>> ListMovies(MovieParameters parameters);
 
         Task<ResponseModel<bool>> DeleteMovie(string movieId);
+
+        Task<ResponseModel<GetMovieDto>> RemoveGenresFromMovie(UpdateMovieGenre model);
+
+        Task<ResponseModel<GetMovieDto>> AddGenresToMovie(UpdateMovieGenre model);
     }
 }

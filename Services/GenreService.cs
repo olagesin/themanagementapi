@@ -22,6 +22,18 @@ namespace Services
         {
             var genreToAdd = _mapper.Map<Genre>(model);
 
+            var existingGenre = await _repositoryManager.GenreRepository
+                .GetByName(genreToAdd.Name, false);
+
+            if(existingGenre is not null)
+            {
+                return new ResponseModel<GetGenreDto>()
+                {
+                    Message = "Genre name already taken.",
+                    Status = ResponseStatus.Failed
+                };
+            }
+
             await _repositoryManager.GenreRepository.CreateGenre(genreToAdd);
             await _repositoryManager.SaveChangesAsync();
 

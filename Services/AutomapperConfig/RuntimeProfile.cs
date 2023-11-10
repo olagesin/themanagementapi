@@ -43,7 +43,7 @@ namespace Services.AutomapperConfig
                 {
                     Description = x.Genre.Description,
                     Name = x.Genre.Name,
-                    UUID = x.UUID,
+                    UUID = x.Genre.UUID,
                     IsActive = x.IsActive,
                 }).ToList()));
         }

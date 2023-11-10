@@ -140,5 +140,51 @@ namespace MovieManagementApi.Presentation.Controllers
                 return Created("", ResponseBuilder.BuildResponse(null, result.Data));
             }
         }
+
+        [HttpPatch("add-genres-to-movie")]
+        [ProducesResponseType(typeof(GlobalResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> AddGenresToMovie(UpdateMovieGenre model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
+            var result = await serviceManager.MovieService.AddGenresToMovie(model);
+
+            if (result.Status != ResponseStatus.Success)
+            {
+                ModelState.AddModelError("Failed", result.Message);
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+            else
+            {
+                return Created("", ResponseBuilder.BuildResponse(null, result.Data));
+            }
+        }
+
+        [HttpPatch("remove-genres-from-movie")]
+        [ProducesResponseType(typeof(GlobalResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GlobalResponse<object>), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> RemoveGenresFromMovie(UpdateMovieGenre model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+
+            var result = await serviceManager.MovieService.RemoveGenresFromMovie(model);
+
+            if (result.Status != ResponseStatus.Success)
+            {
+                ModelState.AddModelError("Failed", result.Message);
+                return UnprocessableEntity(ResponseBuilder.BuildResponse<object>(ModelState, null));
+            }
+            else
+            {
+                return Created("", ResponseBuilder.BuildResponse(null, result.Data));
+            }
+        }
     }
 }

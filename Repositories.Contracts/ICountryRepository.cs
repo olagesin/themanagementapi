@@ -16,6 +16,8 @@ namespace Repositories.Contracts
 
         Task<Country> GetCountryByUUID(string countryUuid, bool trackChanges);
 
+        Task<Country> GetByName(string name, bool trackChanges);
+
         Task<ResponseModel<List<Country>>> ListCountries(CountryParameters parameters, bool trackChanges);
     }
 }

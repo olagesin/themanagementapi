@@ -21,6 +21,14 @@ namespace Repositories
         //public async Task<bool> CheckIfGenresExist(List<string> genreIds, bool trackchanges) =>
         //    await ListAll(trackchanges)
         //    .l
+        
+        public async Task<Genre> GetByName(string name, bool trackChanges)
+        {
+            name = name.Trim();
+
+            return await ListAll(trackChanges)
+                .FirstOrDefaultAsync(x => x.Name == name);
+        }
 
         public async Task<Genre> GetGenreById(int id, bool trackChanges) =>
             await ListAll(trackChanges)

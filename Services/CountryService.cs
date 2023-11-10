@@ -22,6 +22,18 @@ namespace Services
         {
             var countryToAdd = _mapper.Map<Country>(model);
 
+            var existingCountry = await _repositoryManager.CountryRepository
+                .GetByName(countryToAdd.Name, false);
+
+            if(existingCountry is not null)
+            {
+                return new ResponseModel<GetCountryDto>()
+                {
+                    Message = "Country has already exists.",
+                    Status = ResponseStatus.Failed
+                };
+            }
+
             await _repositoryManager.CountryRepository.CreateCountry(countryToAdd);
             await _repositoryManager.SaveChangesAsync();
 

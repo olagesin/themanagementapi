@@ -10,6 +10,8 @@ namespace Repositories.Contracts
 
         Task AddMovieMultipleGenres(List<MovieGenre> movieGenres);
 
+        void RemoveMovieMultipleGenres(List<MovieGenre> movieGenres);
+
         void UpdateMovieGenre(MovieGenre model);
 
         void DeleteMovieGenre(MovieGenre movieGenre);

@@ -27,6 +27,14 @@ namespace Repositories
                 .HasIndex(c => new { c.MovieId, c.GenreId })
                 .IsUnique(true);
 
+            modelBuilder.Entity<Genre>()
+                .HasIndex(c => c.Name)
+                .IsUnique(true);
+
+            modelBuilder.Entity<Country>()
+                .HasIndex(c => c.Name)
+                .IsUnique(true);
+
             base.OnModelCreating(modelBuilder);
         }
     }

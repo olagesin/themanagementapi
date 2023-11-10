@@ -18,6 +18,14 @@ namespace Repositories
 
         public void DeleteCountry(Country country) => Delete(country);
 
+        public async Task<Country> GetByName(string name, bool trackChanges)
+        {
+            name = name.Trim();
+
+            return await ListAll(trackChanges)
+            .FirstOrDefaultAsync(c => c.Name == name);
+        }
+
         public async Task<Country> GetCountryById(int countryId, bool trackChanges) => 
             await ListAll(trackChanges)
             .FirstOrDefaultAsync(c => c.Id == countryId);

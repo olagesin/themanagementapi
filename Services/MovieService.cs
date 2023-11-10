@@ -62,7 +62,6 @@ namespace Services
 
                     movieGenresToCreate.Add(new MovieGenre()
                     {
-                        //MovieId = movieToCreate.Id,
                         GenreId = genre.Id,
                     });
                 }
@@ -71,7 +70,6 @@ namespace Services
 
 
                 await _repositoryManager.MovieRepository.CreateMovie(movieToCreate);
-                //await _repositoryManager.MovieGenreRepository.AddMovieMultipleGenres(movieGenresToCreate);
                 await _repositoryManager.SaveChangesAsync();
 
                 var createdMovie = await _repositoryManager.MovieRepository
@@ -148,6 +146,131 @@ namespace Services
             }
         }
 
+        public async Task<ResponseModel<GetMovieDto>> RemoveGenresFromMovie(UpdateMovieGenre model)
+        {
+            var movie = await _repositoryManager.MovieRepository
+                .GetMovieByUUID(model.MovieId, false);
+
+            if (movie is null)
+            {
+                return new ResponseModel<GetMovieDto>()
+                {
+                    Message = "Movie not found.",
+                    Status = ResponseStatus.NotFound
+                };
+            }
+            else
+            {
+                var movieGenresToRemove = new List<MovieGenre>();
+
+                foreach (var genreId in model.GenreIds)
+                {
+                    var genre = await _repositoryManager.GenreRepository
+                        .GetGenreByUUID(genreId, false);
+
+                    if (genre is null)
+                    {
+                        return new ResponseModel<GetMovieDto>()
+                        {
+                            Message = $"genreId {genreId} is invalid.",
+                            Status = ResponseStatus.Failed
+                        };
+                    }
+
+                    var movieGenre = await _repositoryManager.MovieGenreRepository
+                        .GetMovieGenre(movie.Id, genre.Id, false);
+
+
+                    if (movieGenre is null)
+                    {
+                        return new ResponseModel<GetMovieDto>()
+                        {
+                            Message = $"Genre {genre.UUID} does not belong to this movie.",
+                            Status = ResponseStatus.Failed
+                        };
+                    }
+
+                    movieGenresToRemove.Add(movieGenre);
+                }
+
+                _repositoryManager.MovieGenreRepository.RemoveMovieMultipleGenres(movieGenresToRemove);
+                await _repositoryManager.SaveChangesAsync();
+
+                var updatedMovie = await _repositoryManager.MovieRepository
+                    .GetMovieById(movie.Id, false);
+
+                return new ResponseModel<GetMovieDto>()
+                {
+                    Message = "success.",
+                    Status = ResponseStatus.Success,
+                    Data = _mapper.Map<GetMovieDto>(updatedMovie)
+                };
+            }
+        }
+
+        public async Task<ResponseModel<GetMovieDto>> AddGenresToMovie(UpdateMovieGenre model)
+        {
+            var movie = await _repositoryManager.MovieRepository
+                .GetMovieByUUID(model.MovieId, true);
+
+            if (movie is null)
+            {
+                return new ResponseModel<GetMovieDto>()
+                {
+                    Message = "Movie not found.",
+                    Status = ResponseStatus.NotFound
+                };
+            }
+            else
+            {
+                var movieGenresToAdd = new List<MovieGenre>();
+
+                foreach(var genreId in model.GenreIds)
+                {
+                    var genre = await _repositoryManager.GenreRepository
+                        .GetGenreByUUID(genreId, false);
+
+                    if(genre is null)
+                    {
+                        return new ResponseModel<GetMovieDto>()
+                        {
+                            Message = $"genreId {genreId} is invalid.",
+                            Status = ResponseStatus.Failed
+                        };
+                    }
+
+                    var movieGenre = await _repositoryManager.MovieGenreRepository
+                        .GetMovieGenre(movie.Id, genre.Id, false);
+
+
+                    if(movieGenre is not null)
+                    {
+                        continue; //skip it and don't add it to the list of things to be added
+                    }
+
+                    movieGenresToAdd.Add(new MovieGenre()
+                    {
+                        MovieId = movie.Id,
+                        GenreId = genre.Id
+                    });
+                }
+
+
+                await _repositoryManager.MovieGenreRepository.AddMovieMultipleGenres(movieGenresToAdd);
+                await _repositoryManager.SaveChangesAsync();
+
+                var updatedMovie = await _repositoryManager.MovieRepository
+                    .GetMovieById(movie.Id, false);
+
+                return new ResponseModel<GetMovieDto>()
+                {
+                    Message = "success.",
+                    Status = ResponseStatus.Success,
+                    Data = _mapper.Map<GetMovieDto>(updatedMovie)
+                };
+            }
+        }
+
         public async Task<ResponseModel<List<GetMovieDto>>> ListMovies(MovieParameters parameters)
         {
             var listMovies = await _repositoryManager.MovieRepository
@@ -178,6 +301,7 @@ namespace Services
             else
             {
                 var dataToUpdate = _mapper.Map(model, movie);
+                dataToUpdate.LastModifiedDate = DateTime.UtcNow;
 
                 _repositoryManager.MovieRepository.UpdateMovie(dataToUpdate);
                 await _repositoryManager.SaveChangesAsync();

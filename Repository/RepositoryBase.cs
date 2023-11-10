@@ -41,6 +41,11 @@ namespace Repositories
              await RepositoryContext.Set<T>().AddRangeAsync(entities);
         }
 
+        public void RemoveMultiple(List<T> entities)
+        {
+            RepositoryContext.Set<T>().RemoveRange(entities);
+        }
+
         public void Update(T entity)
         {
             RepositoryContext.Set<T>().Update(entity);

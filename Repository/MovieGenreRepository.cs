@@ -46,6 +46,8 @@ namespace Repositories
             };
         }
 
+        public void RemoveMovieMultipleGenres(List<MovieGenre> movieGenres) => RemoveMultiple(movieGenres);
+
         public void UpdateMovieGenre(MovieGenre model) => Update(model);
     }
 }

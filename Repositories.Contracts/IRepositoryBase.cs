@@ -10,6 +10,7 @@ namespace Repositories.Contracts
         void Update(T entity);
         void Delete(T entity);
         Task CreateMultipleAsync(List<T> entities);
+        void RemoveMultiple(List<T> entities);
 
     }
 }
